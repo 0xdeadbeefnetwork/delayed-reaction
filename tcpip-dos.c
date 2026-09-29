@@ -1,37 +1,3 @@
-
-
-/****************************************************************************
- *                                                                          *
- *        _._     _,-'""`-._                                               *
- *       (,-.`._,'(       |\`-/|                                            *
- *           `-.-' \ )-`( , o o)                                            *
- *                 `-    \`_`"'-                                             *
- *                                                                          *
- *   ReactOS remote kernel DoS                                              *
- *   IP fragment reassembly pool overflow -> BAD_POOL_HEADER BSOD           *
- *                                                                          *
- *   tcpip.sys ProcessFragment miscalculates FragLast when an IP            *
- *   fragment carries IHL > 5 (IP options). The reassembly buffer is        *
- *   sized from the first fragment's data length, but the second            *
- *   fragment's data is computed as TotalLen - IHL*4. With IHL=15           *
- *   and TotalLen=513, the kernel copies 453 bytes into a buffer            *
- *   sized for 500 - 8 (ICMP hdr) = 492. The trailing 39 bytes             *
- *   overflow into the adjacent kernel nonpaged pool block.                 *
- *                                                                          *
- *   two raw IP packets from linux, target BSODs within seconds.            *
- *   no authentication, no open ports needed, just L2 reachability.         *
- *                                                                          *
- *   tested on ReactOS 0.4.x i386                                          *
- *                                                                          *
- *   _SiCk // afflicted.sh                                                  *
- *                                                                          *
- *   build (linux):                                                         *
- *     gcc -o tcpip-dos tcpip-dos.c -O2                                    *
- *   run:                                                                   *
- *     sudo ./tcpip-dos <iface> <target-ip> <target-mac>                   *
- *                                                                          *
- ****************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
