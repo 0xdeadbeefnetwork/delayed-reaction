@@ -1,30 +1,3 @@
-/****************************************************************************
- *                                                                          *
- *        _._     _,-'""`-._                                                *
- *       (,-.`._,'(       |\`-/|                                            *
- *           `-.-' \ )-`( , o o)                                            *
- *                 `-    \`_`"'-                                            *
- *                                                                          *
- *   ReactOS win32ss local privilege escalation                             *
- *   NtUserCallOneParam(GETPROCDEFLAYOUT) missing ProbeForWrite             *
- *   win32ss/user/ntuser/simplecall.c:404                                   *
- *                                                                          *
- *   SetProcessDefaultLayout stores a DWORD in the kernel ppi struct.       *
- *   GetProcessDefaultLayout reads it back via NtUserCallOneParam           *
- *   with the Param as raw output pointer -- no probe, no try/except.       *
- *   Write any DWORD to any address from userland.                          *
- *                                                                          *
- *   tested on ReactOS 0.4.x i386                                           *
- *   user -> SYSTEM                                                         *
- *                                                                          *
- *   _SiCk // afflicted.sh                                                  *
- *                                                                          *
- *   build:                                                                 *
- *     i686-w64-mingw32-gcc -o win32ss-lpe.exe win32ss-lpe.c                *
- *         -luser32 -ladvapi32 -lkernel32 -lntdll -O2                       *
- *                                                                          *
- ****************************************************************************/
-
 #include <windows.h>
 #include <sddl.h>
 #include <stdio.h>
